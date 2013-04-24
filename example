@@ -1,0 +1,29 @@
+require 'open-uri'  
+  
+blogs_file = File.new("world_politics_blogs.csv", 'w')  
+  
+# Var declarations  
+last_three_lines = ["", "", ""]  
+count = 0  
+  
+for x in 1..1  
+  doc = open("http:technorati.com/blogs/directory/politics/world//page-#{x}",   
+  'User-Agent' => "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/525.13 (KHTML, like Gecko) Chrome/0.A.B.C Safari/525.13")  
+  
+  while line=doc.gets  
+    last_three_lines << line  
+    last_three_lines.delete_at(0)  
+  
+    # Matches a listing  
+    if line.index("<a class=\"offsite\" href") then  
+      puts line  
+      count = count + 1  
+      url = line.split("=\"")[2].split("\"")[0]  
+      blog_title = last_three_lines[0].split(">")[1].split("<")[0]  
+      blogs_file.puts count.to_s + ", " + blog_title + ", " + url  
+    end  
+  end  
+  
+  sleep(10)  
+  
+end  
